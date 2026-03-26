@@ -1,49 +1,378 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+// 이 영역은 서버 사이드 자바스크립트를 작성하는 곳입니다.
+const pageTitle = "nasdaq-blog - Financial Insights";
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <h1 class="logo">nasdaq-blog</h1>
+        
+        <nav class="main-nav">
+          <a href="/" class="active">Home</a>
+          <a href="/blog">Blog</a>
+          <a href="/about">About</a>
+        </nav>
+        
+        <div class="social-icons">
+          <span>M</span>
+          <span>🐦</span>
+          <span>🐙</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-container">
+      
+      <div class="main-content">
+        
+        <article class="card featured-card">
+          <div class="featured-header">
+            <span class="badge">Featured Insight</span>
+            <h2>Featured Analysis: NVIDIA (NVDA) - Growth or Peak?</h2>
+          </div>
+          <div class="featured-body">
+            <div class="chart-area">
+              <div class="chart-placeholder">
+                📈 1-month upward trend (Chart Image Area)
+              </div>
+            </div>
+            <div class="target-price">
+              <span class="icon">📈</span>
+              <p>Target Price $1150</p>
+              <h3 class="positive">+7.2%</h3>
+              <small>Date: March 2026</small>
+            </div>
+          </div>
+        </article>
+
+        <div class="post-grid">
+          <article class="card post-card">
+            <h3 class="ticker-title"><span style="color:red">T</span> Tesla (TSLA): Autopilot Regulatory Headwinds</h3>
+            <p>Tesla (TSLA): Autopilot regulatory headwinds revealing for right conarge...</p>
+            <small>March 26, 2026</small>
+          </article>
+
+          <article class="card post-card">
+            <h3 class="ticker-title">🍏 Apple (AAPL): iPhone Sales Projection Update</h3>
+            <p>Apple (AAPL): iPhone Sales projection in in 2026 revenual for rojects onnpered...</p>
+            <small>March 25, 2026</small>
+          </article>
+
+          <article class="card post-card">
+            <h3 class="ticker-title">🪟 Microsoft MS: Power Market Projection Update</h3>
+            <p>Apple (AAPL): iPhone sales projection in 2026 revenual...</p>
+            <small>March 24, 2026</small>
+          </article>
+
+          <article class="card post-card">
+            <h3 class="ticker-title">🪟 Microsoft Strange's Power Market Paitwont</h3>
+            <p>The Microsoft Strangeis's global market and ai copilot trend...</p>
+            <small>March 23, 2026</small>
+          </article>
+        </div>
+      </div>
+
+      <aside class="sidebar">
+        
+        <div class="card sidebar-card">
+          <h3>NASDAQ-100 Top Movers</h3>
+          
+          <div class="movers-section">
+            <h4>Top 3 gainers</h4>
+            <div class="mover-item"><span>NVDA</span> <span class="bar positive-bar" style="width: 80%">+5.2%</span></div>
+            <div class="mover-item"><span>AAPL</span> <span class="bar positive-bar" style="width: 50%">+2.9%</span></div>
+            <div class="mover-item"><span>TSLA</span> <span class="bar positive-bar" style="width: 48%">+2.8%</span></div>
+          </div>
+          
+          <div class="movers-section">
+            <h4>Losers</h4>
+            <div class="mover-item"><span>APCY</span> <span class="bar negative-bar" style="width: 100%">-10.8%</span></div>
+            <div class="mover-item"><span>AAPL</span> <span class="bar negative-bar" style="width: 30%">-1.6%</span></div>
+            <div class="mover-item"><span>MICL</span> <span class="bar negative-bar" style="width: 40%">-3.3%</span></div>
+          </div>
+        </div>
+
+        <div class="card sidebar-card">
+          <h3>Quick Ticker Search</h3>
+          <div class="search-box">
+            <input type="text" placeholder="Search..." />
+            <button>🔍</button>
+          </div>
+        </div>
+
+        <div class="card sidebar-card">
+          <h3>Market Sentiment Index</h3>
+          <div class="sentiment-meter">
+            <div class="gauge">
+              <div class="gauge-color"></div>
+              <div class="gauge-needle"></div>
+            </div>
+            <p style="text-align:center; font-weight:bold; margin-top:10px;">Greed</p>
+          </div>
+        </div>
+
+      </aside>
+    </main>
+  </body>
 </html>
+
+<style>
+  /* 기본 리셋 및 폰트 설정 */
+  :root {
+    --bg-color: #fafbfc;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --border-color: #e5e7eb;
+    --primary-blue: #2563eb;
+    --navy-dark: #1e293b;
+    --positive-color: #22c55e;
+    --negative-color: #ef4444;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text-main);
+  }
+
+  /* 헤더 스타일 */
+  .site-header {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+  }
+
+  .header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+    font-family: serif; /* 이미지와 유사한 느낌을 위해 */
+  }
+
+  .main-nav {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .main-nav a {
+    text-decoration: none;
+    color: var(--text-main);
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+  }
+
+  .main-nav a.active {
+    color: var(--primary-blue);
+    border-bottom: 2px solid var(--primary-blue);
+  }
+
+  .social-icons {
+    display: flex;
+    gap: 1rem;
+    font-size: 1.2rem;
+  }
+
+  /* 레이아웃 스타일 */
+  .dashboard-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+  }
+
+  /* 공통 카드 스타일 */
+  .card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+
+  /* 1. 메인 추천 분석 영역 */
+  .featured-card {
+    overflow: hidden; /* 둥근 모서리 안쪽 내용 넘침 방지 */
+  }
+
+  .featured-header {
+    background: var(--navy-dark);
+    color: white;
+    padding: 1.5rem;
+  }
+
+  .featured-header .badge {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .featured-header h2 {
+    margin: 0.5rem 0 0 0;
+    font-size: 1.5rem;
+  }
+
+  .featured-body {
+    display: flex;
+    padding: 1.5rem;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .chart-area {
+    flex: 2;
+    border: 1px solid var(--border-color);
+    height: 150px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    background: #f8fafc;
+  }
+
+  .target-price {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .target-price .positive {
+    color: var(--positive-color);
+    font-size: 2rem;
+    margin: 0.5rem 0;
+  }
+
+  /* 2. 포스팅 그리드 영역 */
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .post-card {
+    padding: 1.5rem;
+  }
+
+  .ticker-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+  }
+
+  .post-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .post-card small {
+    color: #9ca3af;
+  }
+
+  /* 3. 우측 사이드바 영역 */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .sidebar-card {
+    padding: 1.5rem;
+  }
+
+  .sidebar-card h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+  }
+
+  .movers-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .movers-section h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .mover-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .mover-item span:first-child {
+    width: 40px; /* 종목 티커 너비 고정 */
+  }
+
+  .bar {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    color: white;
+    text-align: right;
+    font-size: 0.8rem;
+  }
+
+  .positive-bar { background: var(--positive-color); }
+  .negative-bar { background: var(--negative-color); }
+
+  /* 검색바 스타일 */
+  .search-box {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .search-box input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+  }
+
+  .search-box button {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  /* 반응형 (모바일) 처리 */
+  @media (max-width: 768px) {
+    .dashboard-container {
+      grid-template-columns: 1fr; /* 모바일에서는 1열로 변경 */
+    }
+    
+    .featured-body {
+      flex-direction: column;
+    }
+
+    .post-grid {
+      grid-template-columns: 1fr; /* 모바일에서는 포스팅 카드도 1열 */
+    }
+  }
+</style>

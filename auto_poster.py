@@ -3,6 +3,9 @@ import time
 from datetime import datetime
 import requests
 import yfinance as yf
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import pandas as pd
 from google import genai
 from google.genai import errors as genai_errors
 from github import Github
@@ -53,12 +56,85 @@ def fetch_stock_data(ticker: str) -> dict:
         "52_week_low": info.get("fiftyTwoWeekLow", "N/A"),
     }
 
-def generate_blog_post(data: dict, ticker: str) -> str:
+def generate_stock_chart(ticker: str, date_str: str) -> str | None:
+    """최근 1달 주가 데이터를 가져와 차트 이미지로 저장"""
+    print(f"📊 [{ticker}] 주가 차트 생성 중...")
+    
+    stock = yf.Ticker(ticker)
+    hist = stock.history(period="1mo")
+    
+    if hist.empty:
+        print("데이터가 없어 차트를 그릴 수 없습니다.")
+        return None
+        
+    plt.figure(figsize=(10, 5))
+    plt.plot(hist.index, hist['Close'], color='#2563eb', linewidth=2, marker='o', markersize=4)
+    
+    plt.title(f"{ticker} - Recent 1 Month Price Trend", fontsize=16, fontweight='bold')
+    plt.xlabel('Date', fontsize=12)
+    plt.ylabel('Closing Price (USD)', fontsize=12)
+    plt.grid(True, linestyle='--', alpha=0.6)
+    
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%m-%d'))
+    plt.gcf().autofmt_xdate()
+    
+    file_name = f"{ticker.lower()}_{date_str}.png"
+    plt.savefig(file_name, bbox_inches='tight', dpi=150)
+    plt.close()
+    
+    return file_name
+
+def upload_image_to_github(repo, local_file_path: str, ticker: str) -> str | None:
+    """생성된 차트 이미지를 GitHub의 public 폴더에 업로드"""
+    print(f"🖼️ [{ticker}] 차트 이미지를 GitHub에 업로드 중...")
+    
+    github_image_path = f"public/images/{local_file_path}"
+    
+    try:
+        with open(local_file_path, "rb") as file:
+            content = file.read()
+            
+        repo.create_file(github_image_path, f"Add chart image for {ticker}", content, branch="main")
+        print("✅ 이미지 업로드 완료!")
+        
+        os.remove(local_file_path)
+        
+        return f"/images/{local_file_path}"
+        
+    except GithubException as e:
+        if e.status == 422: # 이미 존재하는 경우 덮어쓰기
+            try:
+                existing = repo.get_contents(github_image_path, ref="main")
+                with open(local_file_path, "rb") as file:
+                    content = file.read()
+                repo.update_file(
+                    path=github_image_path,
+                    message=f"Update chart image for {ticker}",
+                    content=content,
+                    sha=existing.sha,
+                    branch="main"
+                )
+                print("✅ 이미지 업데이트 완료!")
+                os.remove(local_file_path)
+                return f"/images/{local_file_path}"
+            except Exception as inner_e:
+                print(f"❌ 이미지 업데이트 실패: {inner_e}")
+                return None
+        print(f"❌ 이미지 업로드 실패: {e}")
+        return None
+    except Exception as e:
+        print(f"❌ 이미지 업로드 실패: {e}")
+        return None
+
+def generate_blog_post(data: dict, ticker: str, image_path: str = "") -> str:
     if not GEMINI_API_KEY:
         raise RuntimeError("GEMINI_API_KEY is not set")
     client = genai.Client(api_key=GEMINI_API_KEY)
     today_title = datetime.now().strftime("%Y-%m-%d")
     today_pub = datetime.now().strftime("%b %d %Y")
+    
+    image_markdown = f"\n![{ticker} 주가 차트]({image_path})\n" if image_path else ""
+    
     prompt = f"""
 너는 미국 나스닥 주식을 전문적으로 분석하는 한국인 투자 전문가야.
 다음 제공된 데이터를 바탕으로 투자자들이 흥미로워할 블로그 포스팅을 작성해줘.
@@ -81,7 +157,8 @@ pubDate: "{today_pub}"
 heroImage: "../../assets/blog-placeholder-about.jpg"
 ---
 3. H2(##), H3(###) 태그를 사용하여 서론, 본론(데이터 분석), 결론(투자 인사이트) 구조로 가독성 있게 작성할 것.
-4. 친절하고 전문적인 블로거의 말투를 사용할 것.
+4. 본문의 [데이터 분석] 파트가 시작될 때, 반드시 아래의 마크다운 이미지 태그를 그대로 삽입할 것. (이것이 주가 차트 이미지임){image_markdown}
+5. 친절하고 전문적인 블로거의 말투를 사용할 것.
 """
     try:
         name = GEMINI_MODEL
@@ -156,16 +233,40 @@ def upload_to_github(markdown_content: str, ticker: str) -> None:
         raise
 
 def main():
+    if not GITHUB_TOKEN:
+        print("GITHUB_TOKEN is not set")
+        return
+    try:
+        from github import Auth
+        g = Github(auth=Auth.Token(GITHUB_TOKEN))
+    except Exception:
+        g = Github(GITHUB_TOKEN)
+    repo = g.get_repo(REPO_NAME)
+    today_str = datetime.now().strftime("%Y-%m-%d")
+
     dynamic_tickers = get_trending_tickers(limit=3)
     print(f"\n총 {len(dynamic_tickers)}개 핫이슈 종목 포스팅 자동화를 시작합니다.")
     
     for ticker in dynamic_tickers:
         print(f"\n▶ [{ticker}] 작업 시작...")
         try:
+            # 1. 주가 데이터 수집
             data = fetch_stock_data(ticker)
-            content = generate_blog_post(data, ticker)
+            
+            # 2. 📈 차트 그리기 및 이미지 임시 저장
+            local_image_name = generate_stock_chart(ticker, today_str)
+            
+            md_image_path = ""
+            if local_image_name:
+                # 3. 🖼️ 이미지를 GitHub public/images 폴더에 업로드
+                md_image_path = upload_image_to_github(repo, local_image_name, ticker) or ""
+            
+            # 4. ✍️ AI 글 작성 (이때 이미지 경로를 프롬프트에 전달)
+            content = generate_blog_post(data, ticker, md_image_path)
             if not content.strip():
                 raise RuntimeError("Empty content returned from Gemini")
+                
+            # 5. 🚀 완성된 마크다운 글을 GitHub src/content/blog 폴더에 업로드
             upload_to_github(content, ticker)
             print(f"✅ [{ticker}] GitHub 업로드 성공!")
             

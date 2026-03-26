@@ -1,5 +1,7 @@
 import os
+import time
 from datetime import datetime
+import requests
 import yfinance as yf
 from google import genai
 from google.genai import errors as genai_errors
@@ -9,8 +11,34 @@ from github.GithubException import GithubException
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 REPO_NAME = os.environ.get("REPO_NAME", "chenghun1234-dotcom/nasdaq-ai-blog")
-TARGET_TICKER = os.environ.get("TARGET_TICKER", "NVDA")
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "models/gemini-2.5-flash")
+
+def get_trending_tickers(limit: int = 3) -> list:
+    """야후 파이낸스 API를 호출하여 오늘 가장 핫한 주식 심볼 추출"""
+    print("🔥 오늘의 미국 증시 트렌딩 종목을 탐색합니다...")
+    url = "https://query1.finance.yahoo.com/v1/finance/trending/US"
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+    
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        quotes = data['finance']['result'][0]['quotes']
+        
+        tickers = []
+        for quote in quotes:
+            symbol = quote['symbol']
+            # 순수 영문 알파벳으로만 이루어진 '개별 주식'만 필터링
+            if symbol.isalpha() and len(symbol) <= 5:
+                tickers.append(symbol)
+            if len(tickers) == limit:
+                break
+                
+        print(f"🎯 오늘의 타겟 종목이 선정되었습니다: {tickers}")
+        return tickers if tickers else ["NVDA", "TSLA", "MSFT"]
+    except Exception as e:
+        print(f"❌ 트렌딩 종목 수집 실패: {e}")
+        return ["NVDA", "TSLA", "MSFT"]
 
 def fetch_stock_data(ticker: str) -> dict:
     stock = yf.Ticker(ticker)
@@ -127,10 +155,30 @@ def upload_to_github(markdown_content: str, ticker: str) -> None:
             return
         raise
 
+def main():
+    dynamic_tickers = get_trending_tickers(limit=3)
+    print(f"\n총 {len(dynamic_tickers)}개 핫이슈 종목 포스팅 자동화를 시작합니다.")
+    
+    for ticker in dynamic_tickers:
+        print(f"\n▶ [{ticker}] 작업 시작...")
+        try:
+            data = fetch_stock_data(ticker)
+            content = generate_blog_post(data, ticker)
+            if not content.strip():
+                raise RuntimeError("Empty content returned from Gemini")
+            upload_to_github(content, ticker)
+            print(f"✅ [{ticker}] GitHub 업로드 성공!")
+            
+            # 마지막 종목이 아니면 45초 대기 (API 속도 제한 방지)
+            if ticker != dynamic_tickers[-1]:
+                print("다음 종목 처리를 위해 45초 대기합니다...")
+                time.sleep(45)
+        except Exception as e:
+            print(f"❌ [{ticker}] 처리 중 오류 발생: {e}")
+            continue
+
+    print("\n🎉 오늘의 트렌딩 포스팅 작업이 완벽하게 완료되었습니다!")
+
 if __name__ == "__main__":
-    data = fetch_stock_data(TARGET_TICKER)
-    content = generate_blog_post(data, TARGET_TICKER)
-    if not content.strip():
-        raise RuntimeError("Empty content returned from Gemini")
-    upload_to_github(content, TARGET_TICKER)
+    main()
 

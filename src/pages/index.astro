@@ -1,6 +1,13 @@
 ---
-// 이 영역은 서버 사이드 자바스크립트를 작성하는 곳입니다.
+import { getCollection } from 'astro:content';
+
 const pageTitle = "nasdaq-blog - Financial Insights";
+const allPosts = await getCollection('blog');
+const sortedPosts = allPosts.sort((a, b) => 
+  new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+const latestPosts = sortedPosts.slice(0, 4);
+const featuredPost = sortedPosts[0];
 ---
 
 <html lang="ko">
@@ -34,48 +41,34 @@ const pageTitle = "nasdaq-blog - Financial Insights";
         
         <article class="card featured-card">
           <div class="featured-header">
-            <span class="badge">Featured Insight</span>
-            <h2>Featured Analysis: NVIDIA (NVDA) - Growth or Peak?</h2>
+            <span class="badge">Latest Analysis</span>
+            <h2>{featuredPost?.data.title || 'Featured Analysis'}</h2>
           </div>
           <div class="featured-body">
             <div class="chart-area">
               <div class="chart-placeholder">
-                📈 1-month upward trend (Chart Image Area)
+                📈 Latest Market Analysis
               </div>
             </div>
             <div class="target-price">
-              <span class="icon">📈</span>
-              <p>Target Price $1150</p>
-              <h3 class="positive">+7.2%</h3>
-              <small>Date: March 2026</small>
+              <span class="icon">📊</span>
+              <p>Published</p>
+              <h3 class="positive">{featuredPost?.data.pubDate?.toLocaleDateString('ko-KR') || 'Mar 26, 2026'}</h3>
+              <small><a href={`/blog/${featuredPost?.slug}`} style="color: inherit; text-decoration: none;">Read More →</a></small>
             </div>
           </div>
         </article>
 
         <div class="post-grid">
-          <article class="card post-card">
-            <h3 class="ticker-title"><span style="color:red">T</span> Tesla (TSLA): Autopilot Regulatory Headwinds</h3>
-            <p>Tesla (TSLA): Autopilot regulatory headwinds revealing for right conarge...</p>
-            <small>March 26, 2026</small>
-          </article>
-
-          <article class="card post-card">
-            <h3 class="ticker-title">🍏 Apple (AAPL): iPhone Sales Projection Update</h3>
-            <p>Apple (AAPL): iPhone Sales projection in in 2026 revenual for rojects onnpered...</p>
-            <small>March 25, 2026</small>
-          </article>
-
-          <article class="card post-card">
-            <h3 class="ticker-title">🪟 Microsoft MS: Power Market Projection Update</h3>
-            <p>Apple (AAPL): iPhone sales projection in 2026 revenual...</p>
-            <small>March 24, 2026</small>
-          </article>
-
-          <article class="card post-card">
-            <h3 class="ticker-title">🪟 Microsoft Strange's Power Market Paitwont</h3>
-            <p>The Microsoft Strangeis's global market and ai copilot trend...</p>
-            <small>March 23, 2026</small>
-          </article>
+          {latestPosts.map((post) => (
+            <a href={`/blog/${post.slug}`} style="text-decoration: none; color: inherit;">
+              <article class="card post-card">
+                <h3 class="ticker-title">{post.data.title}</h3>
+                <p>{post.data.description || post.body?.substring(0, 100) + '...'}</p>
+                <small>{post.data.pubDate?.toLocaleDateString('ko-KR')}</small>
+              </article>
+            </a>
+          ))}
         </div>
       </div>
 
@@ -272,6 +265,16 @@ const pageTitle = "nasdaq-blog - Financial Insights";
 
   .post-card {
     padding: 1.5rem;
+  }
+
+  .post-grid a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .post-grid a:hover .post-card {
+    box-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease;
   }
 
   .ticker-title {

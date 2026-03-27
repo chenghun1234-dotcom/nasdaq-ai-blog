@@ -8,6 +8,9 @@ const sortedPosts = allPosts.sort((a, b) =>
 );
 const latestPosts = sortedPosts.slice(0, 4);
 const featuredPost = sortedPosts[0];
+
+// Generate slug from post id
+const getSlug = (id: string) => id.replace(/\.[^/.]+$/, '');
 ---
 
 <html lang="ko">
@@ -54,14 +57,14 @@ const featuredPost = sortedPosts[0];
               <span class="icon">📊</span>
               <p>Published</p>
               <h3 class="positive">{featuredPost?.data.pubDate?.toLocaleDateString('ko-KR') || 'Mar 26, 2026'}</h3>
-              <small><a href={`/blog/${featuredPost?.slug}`} style="color: inherit; text-decoration: none;">Read More →</a></small>
+              <small><a href={`/blog/${getSlug(featuredPost?.id || '')}`} style="color: inherit; text-decoration: none;">Read More →</a></small>
             </div>
           </div>
         </article>
 
         <div class="post-grid">
           {latestPosts.map((post) => (
-            <a href={`/blog/${post.slug}`} style="text-decoration: none; color: inherit;">
+            <a href={`/blog/${getSlug(post.id)}`} style="text-decoration: none; color: inherit;">
               <article class="card post-card">
                 <h3 class="ticker-title">{post.data.title}</h3>
                 <p>{post.data.description || post.body?.substring(0, 100) + '...'}</p>

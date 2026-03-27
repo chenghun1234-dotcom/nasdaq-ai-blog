@@ -133,33 +133,34 @@ def generate_blog_post(data: dict, ticker: str, image_path: str = "") -> str:
     today_title = datetime.now().strftime("%Y-%m-%d")
     today_pub = datetime.now().strftime("%b %d %Y")
     
-    image_markdown = f"\n![{ticker} 주가 차트]({image_path})\n" if image_path else ""
+    image_markdown = f"\n![{ticker} Stock Chart]({image_path})\n" if image_path else ""
     
     prompt = f"""
-너는 미국 나스닥 주식을 전문적으로 분석하는 한국인 투자 전문가야.
-다음 제공된 데이터를 바탕으로 투자자들이 흥미로워할 블로그 포스팅을 작성해줘.
+    You are a professional Wall Street financial analyst.
+    Based on the provided data, write an engaging and professional blog post in **English**.
+    
+    [Data]
+    - Name: {data['name']} ({ticker})
+    - Current Price: ${data['price']}
+    - Previous Close: ${data['previous_close']}
+    - P/E Ratio: {data['pe_ratio']}
+    - 52 Week High: ${data['52_week_high']}
+    - 52 Week Low: ${data['52_week_low']}
 
-[데이터]
-- 종목명: {data['name']} ({ticker})
-- 현재가: ${data['price']}
-- 전일종가: ${data['previous_close']}
-- PER: {data['pe_ratio']}
-- 52주 최고가: ${data['52_week_high']}
-- 52주 최저가: ${data['52_week_low']}
-
-[작성 규칙]
-1. 마크다운(.md) 형식으로 작성할 것.
-2. Astro 블로그가 인식할 수 있도록 글의 가장 첫 부분에 반드시 아래와 같은 YAML Frontmatter를 포함할 것:
----
-title: "{data['name']} ({ticker}) 주가 분석 및 전망 - {today_title}"
-description: "나스닥 {data['name']}의 현재가, PER, 52주 최고/최저가 데이터를 바탕으로 한 상세 분석 리포트입니다."
-pubDate: "{today_pub}"
-heroImage: "../../assets/blog-placeholder-about.jpg"
----
-3. H2(##), H3(###) 태그를 사용하여 서론, 본론(데이터 분석), 결론(투자 인사이트) 구조로 가독성 있게 작성할 것.
-4. 본문의 [데이터 분석] 파트가 시작될 때, 반드시 아래의 마크다운 이미지 태그를 그대로 삽입할 것. (이것이 주가 차트 이미지임){image_markdown}
-5. 친절하고 전문적인 블로거의 말투를 사용할 것.
-"""
+    [Rules]
+    1. Write in Markdown (.md) format.
+    2. Include the following YAML Frontmatter at the very beginning exactly as shown:
+    ---
+    title: "{data['name']} ({ticker}) Stock Analysis & Price Target - {today_title}"
+    description: "In-depth analysis of {data['name']} ({ticker}) based on current price, P/E ratio, and recent trends."
+    pubDate: "{today_pub}"
+    heroImage: "../../assets/blog-placeholder-about.jpg"
+    ---
+    3. Insert this exact markdown image tag at the beginning of the analysis section:
+       ![{ticker} Stock Chart]({image_path})
+    4. Use H2 (##) and H3 (###) tags for Introduction, Technical Analysis, and Conclusion.
+    5. Keep the tone professional, objective, and easy to read for retail investors. Do not hallucinate data.
+    """
     try:
         name = GEMINI_MODEL
         if not name.startswith("models/"):

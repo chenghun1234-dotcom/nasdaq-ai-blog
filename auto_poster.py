@@ -162,7 +162,7 @@ def generate_blog_post(data: dict, ticker: str, image_path: str = "") -> str:
              Immediately below the image tag, strictly insert the following HTML button code to promote TradingView:
        
              <div style="text-align: center; margin: 20px 0;">
-                 <a href="https://nasdaq-blog.nextfintechai.com/?aff_id=165077" target="_blank" style="display:inline-block; background-color:#131722; color:white; padding:10px 20px; font-weight:bold; border-radius:6px; text-decoration:none; font-size: 0.95rem;">
+                 <a href="https://www.tradingview.com/?aff_id=165077&aff_sub=under_chart&source=blog" target="_blank" style="display:inline-block; background-color:#131722; color:white; padding:10px 20px; font-weight:bold; border-radius:6px; text-decoration:none; font-size: 0.95rem;">
                      📊 Analyze {ticker} on TradingView (Free Trial)
                  </a>
              </div>

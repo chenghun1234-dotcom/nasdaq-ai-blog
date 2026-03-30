@@ -158,6 +158,14 @@ def generate_blog_post(data: dict, ticker: str, image_path: str = "") -> str:
     ---
     3. Insert this exact markdown image tag at the beginning of the analysis section:
        ![{ticker} Stock Chart]({image_path})
+       
+             Immediately below the image tag, strictly insert the following HTML button code to promote TradingView:
+       
+             <div style="text-align: center; margin: 20px 0;">
+                 <a href="https://nasdaq-blog.nextfintechai.com/?aff_id=165077" target="_blank" style="display:inline-block; background-color:#131722; color:white; padding:10px 20px; font-weight:bold; border-radius:6px; text-decoration:none; font-size: 0.95rem;">
+                     📊 Analyze {ticker} on TradingView (Free Trial)
+                 </a>
+             </div>
     4. Use H2 (##) and H3 (###) tags for Introduction, Technical Analysis, and Conclusion.
     5. Keep the tone professional, objective, and easy to read for retail investors. Do not hallucinate data.
     """

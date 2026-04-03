@@ -1,4 +1,4 @@
----
+﻿---
 title: "Giant Mining Corp. (BFGFF) Stock Analysis & Price Target - 2026-03-29"
 description: "In-depth analysis of Giant Mining Corp. (BFGFF) based on current price, P/E ratio, and recent trends."
 pubDate: "Mar 29 2026"

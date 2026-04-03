@@ -1,4 +1,4 @@
----
+﻿---
 title: "Argan, Inc. (AGX) Stock Analysis & Price Target - 2026-03-27"
 description: "In-depth analysis of Argan, Inc. (AGX) based on current price, P/E ratio, and recent trends."
 pubDate: "Mar 27 2026"

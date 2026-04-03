@@ -1,4 +1,4 @@
----
+﻿---
 title: "Schwab US Dividend Equity ETF (SCHD) Stock Analysis & Price Target - 2026-03-28"
 description: "In-depth analysis of Schwab US Dividend Equity ETF (SCHD) based on current price, P/E ratio, and recent trends."
 pubDate: "Mar 28 2026"

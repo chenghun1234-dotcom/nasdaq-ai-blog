@@ -151,7 +151,7 @@ def generate_blog_post(data: dict, ticker: str, image_path: str = "") -> str:
     title: "{data['name']} ({ticker}) 주가 전망 및 심층 분석 - {today_str}"
     description: "현재가, PER, 최근 트렌드를 바탕으로 한 {data['name']} ({ticker})의 심층 분석 리포트입니다."
     pubDate: "{datetime.now().strftime("%Y-%m-%d")}"
-    heroImage: "/blog-placeholder-about.jpg"
+    heroImage: "../../assets/blog-placeholder-about.jpg"
     ---
 
     3. 분석 섹션(본문) 시작 부분에 아래 차트 이미지 태그를 정확히 삽입하세요:

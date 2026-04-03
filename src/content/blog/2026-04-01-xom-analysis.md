@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Exxon Mobil Corporation (XOM) Stock Analysis & Price Target - 2026-04-01"
 description: "In-depth analysis of Exxon Mobil Corporation (XOM) based on current price, P/E ratio, and recent trends."
 pubDate: "Apr 01 2026"

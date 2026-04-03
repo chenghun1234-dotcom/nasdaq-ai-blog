@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Sky Quarry Inc. (SKYQ) Stock Analysis & Price Target - 2026-04-02"
 description: "In-depth analysis of Sky Quarry Inc. (SKYQ) based on current price, P/E ratio, and recent trends."
 pubDate: "Apr 02 2026"

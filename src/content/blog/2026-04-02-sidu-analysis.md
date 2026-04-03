@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Sidus Space, Inc. (SIDU) Stock Analysis & Price Target - 2026-04-02"
 description: "In-depth analysis of Sidus Space, Inc. (SIDU) based on current price, P/E ratio, and recent trends."
 pubDate: "Apr 02 2026"

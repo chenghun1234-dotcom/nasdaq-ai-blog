@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Phillips 66 (PSX) Stock Analysis & Price Target - 2026-04-01"
 description: "In-depth analysis of Phillips 66 (PSX) based on current price, P/E ratio, and recent trends."
 pubDate: "Apr 01 2026"

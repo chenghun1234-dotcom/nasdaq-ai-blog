@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Nike, Inc. (NKE) Stock Analysis & Price Target - 2026-03-31"
 description: "In-depth analysis of Nike, Inc. (NKE) based on current price, P/E ratio, and recent trends."
 pubDate: "Mar 31 2026"

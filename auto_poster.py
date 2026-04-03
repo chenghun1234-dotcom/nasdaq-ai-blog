@@ -130,58 +130,58 @@ def generate_blog_post(data: dict, ticker: str, image_path: str = "") -> str:
     if not GEMINI_API_KEY:
         raise RuntimeError("GEMINI_API_KEY is not set")
     client = genai.Client(api_key=GEMINI_API_KEY)
-    today_title = datetime.now().strftime("%Y-%m-%d")
-    today_pub = datetime.now().strftime("%b %d %Y")
+    today_str = datetime.now().strftime("%Y-%m-%d")
     
     prompt = f"""
-    You are a professional Wall Street financial analyst.
-    Based on the provided data, write an engaging and professional blog post in **English**.
+    당신은 월스트리트의 전문 금융 애널리스트입니다.
+    제공된 데이터를 바탕으로 한국 개인 투자자들이 읽기 쉽고 전문적인 블로그 포스트를 **한국어**로 작성해 주세요.
     
     [Data]
-    - Name: {data['name']} ({ticker})
-    - Current Price: ${data['price']}
-    - Previous Close: ${data['previous_close']}
-    - P/E Ratio: {data['pe_ratio']}
+    - 종목명: {data['name']} ({ticker})
+    - 현재가: ${data['price']}
+    - 전일 종가: ${data['previous_close']}
+    - PER: {data['pe_ratio']}
     - 52 Week High: ${data['52_week_high']}
     - 52 Week Low: ${data['52_week_low']}
 
     [Rules]
-    1. Write in Markdown (.md) format.
-    2. Include the following YAML Frontmatter at the very beginning exactly as shown:
+    1. 마크다운(.md) 형식으로 작성하세요.
+    2. 글의 맨 처음에 아래의 YAML Frontmatter를 정확히 포함하세요:
     ---
-    title: "{data['name']} ({ticker}) Stock Analysis & Price Target - {today_title}"
-    description: "In-depth analysis of {data['name']} ({ticker}) based on current price, P/E ratio, and recent trends."
-    pubDate: "{today_pub}"
-        heroImage: "/blog-placeholder-about.jpg"
+    title: "{data['name']} ({ticker}) 주가 전망 및 심층 분석 - {today_str}"
+    description: "현재가, PER, 최근 트렌드를 바탕으로 한 {data['name']} ({ticker})의 심층 분석 리포트입니다."
+    pubDate: "{datetime.now().strftime("%Y-%m-%d")}"
+    heroImage: "/blog-placeholder-about.jpg"
     ---
 
-    3. Insert this exact markdown image tag at the beginning of the analysis section:
-       ![{ticker} Stock Chart]({image_path})
+    3. 분석 섹션(본문) 시작 부분에 아래 차트 이미지 태그를 정확히 삽입하세요:
+       ![{ticker} 주가 차트]({image_path})
        
-             Immediately below the image tag, strictly insert the following HTML button code to promote TradingView. (Do not change this code):
+       차트 이미지 바로 아래에 트레이딩뷰 제휴 버튼 HTML 코드를 반드시 삽입하세요 (코드 수정 금지):
        
-             <div style="text-align: center; margin: 20px 0;">
-                 <a href="https://www.tradingview.com/?aff_id=165077&aff_sub=under_chart&source=blog" target="_blank" style="display:inline-block; background-color:#131722; color:white; padding:10px 20px; font-weight:bold; border-radius:6px; text-decoration:none; font-size: 0.95rem;">
-                     📊 Analyze {ticker} on TradingView (Free Trial)
-                 </a>
-             </div>
+       <div style="text-align: center; margin: 20px 0;">
+         <a href="https://www.tradingview.com/?aff_id=165077&aff_sub=under_chart&source=blog" target="_blank" style="display:inline-block; background-color:#131722; color:white; padding:10px 20px; font-weight:bold; border-radius:6px; text-decoration:none; font-size: 0.95rem;">
+           📊 트레이딩뷰에서 {ticker} 차트 심층 분석하기 (무료 체험)
+         </a>
+       </div>
 
-    4. Use H2 (##) and H3 (###) tags for Introduction, Technical Analysis, and Conclusion.
+    4. H2 (##) 및 H3 (###) 태그를 사용하여 서론, 기술적 분석, 결론 등을 나누어 가독성을 높이세요.
 
-        5. At the very end of the blog post, strictly insert the following Markdown block exactly as it is (for Moomoo promotion):
+    5. 결론 파트 직후에 독자의 클릭을 유도하는 아래 마크다운 블록을 정확히 삽입하세요 (문구와 링크 수정 금지):
 
-        ---
-        ### 🎁 Exclusive Offer for NASDAQ Investors
-        Want to buy **{ticker}** and other top NASDAQ stocks with $0 commission?
+    ---
+    ### 📊 {ticker}의 실시간 차트와 정밀 분석이 더 필요하신가요?
+    전문 투자자들이 입을 모아 추천하는 **트레이딩뷰(TradingView)**를 활용해 보세요. 
+    오늘 분석한 {ticker}의 주가 흐름을 월가 애널리스트들과 동일한 환경에서 실시간으로 추적할 수 있습니다. 
+    
+    지금 아래 링크를 통해 가입하시면 **모든 프리미엄 기능을 30일 동안 무료**로 체험해 보실 수 있습니다.
+    
+    👉 **[트레이딩뷰 프리미엄 혜택 받고 실시간 차트 보기](https://www.tradingview.com/?aff_id=165077&aff_sub=under_chart&source=blog)**
+    
+    *※ 더 정확한 데이터가 더 나은 수익을 만듭니다.*
+    ---
 
-        **Moomoo** is currently offering a massive welcome bonus for new users. Open an account, make a qualifying deposit, and **get up to 15 FREE stocks!**
-
-        👉 **[Claim Your Free Stocks on Moomoo Now](여기에_무무_제휴링크_입력)**
-
-        *Disclaimer: Promotional offers may vary by region. Terms and conditions apply.*
-        ---
-
-        6. Keep the tone professional, objective, and easy to read for retail investors. Do not hallucinate data.
+    6. 한국 투자자들이 공감할 수 있도록 전문적이고 객관적인 톤을 유지하며, 데이터에 없는 내용을 지어내지(Hallucination) 마세요.
     """
     try:
         name = GEMINI_MODEL

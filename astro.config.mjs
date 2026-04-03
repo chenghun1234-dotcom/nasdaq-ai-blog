@@ -6,6 +6,6 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://a-sense-project.vercel.app',
+	site: 'https://nasdaq-blog.nextfintechai.com',
 	integrations: [mdx(), sitemap()],
 });

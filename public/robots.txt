@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://a-sense-project.vercel.app/sitemap-index.xml
+Sitemap: https://nasdaq-blog.nextfintechai.com/sitemap.xml
+Sitemap: https://nasdaq-blog.nextfintechai.com/sitemap-index.xml

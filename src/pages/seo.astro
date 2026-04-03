@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const getSlug = (id) => id.replace(/\.[^/.]+$/, '');
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title="SEO Pages | nasdaq-blog"
+			description="SEO index page for important URLs and recent NASDAQ analysis posts."
+		/>
+	</head>
+	<body>
+		<!-- Google Tag Manager (noscript) -->
+		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KXN8STKW" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<!-- End Google Tag Manager (noscript) -->
+		<Header />
+		<main>
+			<h1>SEO Index</h1>
+			<p>This page helps search engines discover key URLs quickly.</p>
+
+			<section>
+				<h2>Core Pages</h2>
+				<ul>
+					<li><a href="/">Home</a></li>
+					<li><a href="/blog/">Blog</a></li>
+					<li><a href="/about/">About</a></li>
+					<li><a href="/rss.xml">RSS Feed</a></li>
+					<li><a href="/sitemap.xml">Sitemap (Primary)</a></li>
+					<li><a href="/sitemap-index.xml">Sitemap Index</a></li>
+				</ul>
+			</section>
+
+			<section>
+				<h2>Latest Analysis Posts</h2>
+				<ul>
+					{posts.map((post) => (
+						<li>
+							<a href={`/blog/${getSlug(post.id)}/`}>{post.data.title}</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		max-width: 900px;
+		margin: 0 auto;
+		padding: 1.5rem 1rem 2.5rem;
+	}
+	h1 {
+		margin-bottom: 0.5rem;
+	}
+	h2 {
+		margin-top: 1.5rem;
+	}
+	ul {
+		line-height: 1.85;
+	}
+	a {
+		color: rgb(var(--accent));
+		text-decoration: none;
+	}
+	a:hover {
+		text-decoration: underline;
+	}
+</style>

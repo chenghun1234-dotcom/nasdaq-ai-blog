@@ -80,9 +80,25 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 						<h1>{title}</h1>
 						<hr />
 					</div>
+
+					<!-- 카카오 애드핏 - 본문 상단 -->
+					<div style="text-align:center; margin: 1rem 0 1.5rem;">
+						<ins class="kakao_ad_area" style="display:none;"
+							data-ad-unit="DAN-GL8B2lPy1d6Rfr5r"
+							data-ad-width="320"
+							data-ad-height="50"></ins>
+					</div>
+
 					<slot />
 				</div>
 			</article>
+			<!-- 카카오 애드핏 - 본문 하단 -->
+			<div style="text-align:center; margin: 2rem 0 1rem;">
+				<ins class="kakao_ad_area" style="display:none;"
+					data-ad-unit="DAN-GL8B2lPy1d6Rfr5r"
+					data-ad-width="320"
+					data-ad-height="50"></ins>
+			</div>
 		</main>
 		<Footer />
 	</body>

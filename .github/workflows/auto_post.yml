@@ -27,14 +27,4 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
         run: python auto_poster.py
-
-      - name: Deploy to Vercel (Production)
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        run: |
-          # project.json 수동 생성 후 Vercel CLI로 배포
-          mkdir -p .vercel
-          printf '{"orgId":"%s","projectId":"%s"}' "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > .vercel/project.json
-          cat .vercel/project.json
-          npx vercel@latest deploy --prod --token="${{ secrets.VERCEL_TOKEN }}" --yes --no-wait
+        # Vercel 배포는 GitHub push 감지 후 자동으로 처리됨

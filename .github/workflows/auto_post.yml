@@ -32,4 +32,9 @@ jobs:
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        run: npx vercel deploy --prod --token="${{ secrets.VERCEL_TOKEN }}" --yes
+        run: |
+          # project.json 수동 생성 후 Vercel CLI로 배포
+          mkdir -p .vercel
+          printf '{"orgId":"%s","projectId":"%s"}' "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" > .vercel/project.json
+          cat .vercel/project.json
+          npx vercel@latest deploy --prod --token="${{ secrets.VERCEL_TOKEN }}" --yes --no-wait

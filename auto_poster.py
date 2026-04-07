@@ -1,6 +1,7 @@
 import os
 import time
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import requests
 import yfinance as yf
 import matplotlib.pyplot as plt
@@ -15,6 +16,11 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 REPO_NAME = os.environ.get("REPO_NAME", "chenghun1234-dotcom/nasdaq-ai-blog")
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "models/gemini-2.5-flash")
+KST = ZoneInfo("Asia/Seoul")
+
+
+def now_kst() -> datetime:
+    return datetime.now(KST)
 
 def get_trending_tickers(limit: int = 3) -> list:
     """야후 파이낸스 API를 호출하여 오늘 가장 핫한 주식 심볼 추출"""
@@ -130,7 +136,8 @@ def generate_blog_post(data: dict, ticker: str, image_path: str = "") -> str:
     if not GEMINI_API_KEY:
         raise RuntimeError("GEMINI_API_KEY is not set")
     client = genai.Client(api_key=GEMINI_API_KEY)
-    today_str = datetime.now().strftime("%Y-%m-%d")
+    current_time = now_kst()
+    today_str = current_time.strftime("%Y-%m-%d")
     
     prompt = f"""
     당신은 월스트리트의 전문 금융 애널리스트입니다.
@@ -150,7 +157,7 @@ def generate_blog_post(data: dict, ticker: str, image_path: str = "") -> str:
     ---
     title: "{data['name']} ({ticker}) 주가 전망 및 심층 분석 - {today_str}"
     description: "현재가, PER, 최근 트렌드를 바탕으로 한 {data['name']} ({ticker})의 심층 분석 리포트입니다."
-    pubDate: "{datetime.now().strftime("%Y-%m-%d")}"
+    pubDate: "{today_str}"
     heroImage: "../../assets/blog-placeholder-about.jpg"
     ---
 
@@ -237,7 +244,7 @@ def upload_to_github(markdown_content: str, ticker: str) -> None:
     except Exception:
         g = Github(GITHUB_TOKEN)
     repo = g.get_repo(REPO_NAME)
-    today_str = datetime.now().strftime("%Y-%m-%d")
+    today_str = now_kst().strftime("%Y-%m-%d")
     file_path = f"src/content/blog/{today_str}-{ticker.lower()}-analysis.md"
     commit_message = f"Auto Post: {ticker} 주가 분석 업데이트"
     try:
@@ -265,7 +272,9 @@ def main():
     except Exception:
         g = Github(GITHUB_TOKEN)
     repo = g.get_repo(REPO_NAME)
-    today_str = datetime.now().strftime("%Y-%m-%d")
+    current_time = now_kst()
+    today_str = current_time.strftime("%Y-%m-%d")
+    print(f"🕒 한국 시간 기준 자동 포스팅 날짜: {today_str} ({current_time.isoformat()})")
 
     dynamic_tickers = get_trending_tickers(limit=3)
     print(f"\n총 {len(dynamic_tickers)}개 핫이슈 종목 포스팅 자동화를 시작합니다.")
